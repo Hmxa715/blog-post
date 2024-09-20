@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Blog Posts</h1>
+
+    <% if (user) { %>
+        <form action="/logout" method="POST" style="display:inline;">
+            <button type="submit" class="button delete-button">Logout</button>
+        </form>
+    <% } else { %>
+        <a href="/login">Login</a> | <a href="/register">Register</a>
+    <% } %>
+
+    <ul>
+        <% posts.forEach(post => { %>
+            <li>
+                <h2><a href="/post/<%= post.id %>"><%= post.title %></a></h2>
+                <p><%= post.body %></p>
+                <p><strong>Comments:</strong> <%= post.comments.length %></p>
+                <% if (user) { %>
+                    <a href="/post/<%= post.id %>/edit" class="button">Edit</a>
+                    <form action="/post/<%= post.id %>/delete" method="POST" style="display:inline;" onsubmit="confirmDelete(event);">
+                        <button type="submit" class="button delete-button">Delete</button>
+                    </form>
+                <% } %>
+            </li>
+        <% }); %>
+    </ul>
+    <form action="/posts" method="POST">
+        <input type="text" name="title" placeholder="Title" required>
+        <textarea name="body" placeholder="Content" required></textarea>
+        <button type="submit" class="button">Create Post</button>
+    </form>
+
+    <script>
+        function confirmDelete(event) {
+            if (!confirm("Are you sure you want to delete this post?")) {
+                event.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>
